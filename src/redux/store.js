@@ -1,1 +1,5 @@
-// configure aqui sua store
+const store = Redux.createStore();
+
+if (window.Cypress) {
+  window.store = store;
+}
