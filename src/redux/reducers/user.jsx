@@ -5,7 +5,7 @@ const INITIAL_STATE = { email: '' };
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case EMAIL:
-    return { ...state, ...action.enter };
+    return { ...state, email: action.enter };
   default: return { state };
   }
 };
