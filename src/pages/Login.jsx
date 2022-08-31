@@ -17,14 +17,13 @@ class Login extends Component {
   };
 
   submit = (email) => {
-    email.preventDefault();
     const emailOk = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/;
     return emailOk.test(email);
   };
 
   senha = (password) => {
     const minCharacters = 6;
-    return password.length > minCharacters;
+    return password.length >= minCharacters;
   };
 
   submitButton = () => {
@@ -32,7 +31,8 @@ class Login extends Component {
     return this.submit(email) && this.senha(password);
   };
 
-  logIn = () => {
+  logIn = (e) => {
+    e.preventDefault();
     const { dispatch, history } = this.props;
     const { email } = this.state;
     dispatch(setEnter(email));
@@ -49,6 +49,7 @@ class Login extends Component {
           </p>
           <input
             type="email"
+            name="email"
             data-testid="email-input"
             value={ email }
             onChange={ this.handleChange }
@@ -57,6 +58,7 @@ class Login extends Component {
         <div>
           <input
             type="password"
+            name="password"
             data-testid="password-input"
             value={ password }
             onChange={ this.handleChange }
@@ -78,7 +80,7 @@ class Login extends Component {
 
 Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
-  history: PropTypes.shape.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   push: PropTypes.func.isRequired,
 };
 
