@@ -1,57 +1,76 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { setEnter } from '../redux/actions';
 
 class Login extends Component {
   state = {
     email: '',
     password: '',
+    buttonEnterDisabled: true,
   };
 
-  validations = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value }, () => {
+      this.setState({ buttonEnterDisabled: !this.submitButton() });
+    });
   };
 
-  buttonSubmit = () => {
-    preventDefault();
-    const { email } = this.state;
+  submit = (email) => {
+    email.preventDefault();
+    const emailOk = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/;
+    return emailOk.test(email);
+  };
+
+  senha = (password) => {
+    const minCharacters = 6;
+    return password.length > minCharacters;
+  };
+
+  submitButton = () => {
+    const { email, password } = this.state;
+    return this.submit(email) && this.senha(password);
+  };
+
+  logIn = () => {
     const { dispatch, history } = this.props;
-    dispatch(ativar(email));
-    dispatch(validar());
+    const { email } = this.state;
+    dispatch(setEnter(email));
     history.push('/carteira');
   };
 
   render() {
-    const { email, password } = this.state;
-
-    const validarEmail = 'alguem@alguem.com';
-    const characterMinlength = 6;
-    const validarSenha = password.length > characterMinlength;
-
-    const desabilitado = !(validarEmail && validarSenha);
-
+    const { email, password, buttonEnterDisabled } = this.state;
     return (
       <div>
-        <form onSubmit={ this.buttonSubmit }>
+        <div>
+          <p>
+            Login
+          </p>
           <input
-            type="text"
-            value={ email }
-            onChange={ this.validado }
+            type="email"
             data-testid="email-input"
+            value={ email }
+            onChange={ this.handleChange }
           />
+        </div>
+        <div>
           <input
-            type="text"
-            value={ password }
-            onChange={ this.validations }
+            type="password"
             data-testid="password-input"
+            value={ password }
+            onChange={ this.handleChange }
           />
+        </div>
+        <div>
           <button
-            disabled={ desabilitado }
-            type="submit"
+            type="button"
+            onClick={ this.logIn }
+            disabled={ buttonEnterDisabled }
           >
             Entrar
           </button>
-        </form>
+        </div>
       </div>
     );
   }

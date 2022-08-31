@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   idToEdit: 0,
 };
 
-const walletReducer = (state = INITIAL_STATE, money) => {
+const siteWalletReducer = (state = INITIAL_STATE, money) => {
   switch (money.type) {
   case SITE_WALLET:
     return { ...state, ...money.value };
@@ -15,4 +15,4 @@ const walletReducer = (state = INITIAL_STATE, money) => {
   }
 };
 
-export default walletReducer;
+export default siteWalletReducer;
