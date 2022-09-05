@@ -1,5 +1,5 @@
-import { SITE_WALLET, API_REQUEST_TEST,
-  API_SUCESS_TEST, API_ENTER_TEST } from '../actions';
+import { CURRENCY_VALUE, API_REQUEST_TEST,
+  API_SUCESS_TEST, API_FAIL_TEST } from '../actions';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -12,8 +12,16 @@ const INITIAL_STATE = {
 
 const siteWalletReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case SITE_WALLET:
-    return { ...state, ...action.value };
+  case CURRENCY_VALUE:
+    return { ...state,
+      isFetching: false,
+      error: '',
+      expenses:
+      [
+        ...state.expenses,
+        { id: state.expenses.length, ...action.payload },
+      ],
+    };
 
   case API_REQUEST_TEST:
     return { ...state, isFetching: true };
@@ -24,7 +32,7 @@ const siteWalletReducer = (state = INITIAL_STATE, action) => {
       isFetching: false,
       error: '' };
 
-  case API_ENTER_TEST:
+  case API_FAIL_TEST:
     return { ...state,
       isFetching: false,
       error: action.payload.error,

@@ -1,16 +1,18 @@
 const URL_API = 'https://economia.awesomeapi.com.br/json/all';
 
-const showAllCoins = async () => {
+export const showAllCoins = async () => {
   const response = await fetch(URL_API);
-  const data = await response.json();
-  return data;
+  const payDay = await response.json();
+  return payDay;
 };
 
-const fetchCoins = async () => {
-  const coins = await showAllCoins();
-  const keys = Object.keys(coins);
-  const currencies = keys.filter((key) => key !== 'USDT');
-  return { currencies };
+export const fetchAllCoins = async () => {
+  try {
+    const coins = await showAllCoins();
+    const keys = Object.keys(coins);
+    const currencies = keys.filter((key) => key !== 'USDT');
+    return { currencies };
+  } catch (error) {
+    return error;
+  }
 };
-
-export default fetchCoins;
