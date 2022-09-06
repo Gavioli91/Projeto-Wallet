@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchValueCoins } from '../redux/actions';
+import { fetchValueCoins, testApiSuccess } from '../redux/actions';
+import { showAllCoins } from '../services/requestApi';
 
 class WalletForm extends Component {
   state = { value: '',
@@ -20,16 +21,20 @@ class WalletForm extends Component {
     this.setState({ [name]: value });
   };
 
-  submitButton = (event) => {
+  submitButton = async (event) => {
     event.preventDefault();
-    // submitButton = () => {
-    // const { dispatch } = this.props;
-    // dispatch((this.state));
+    const { value, currency, method, tag, description } = this.state;
+    const { dispatch, expense } = this.props;
+    const id = expense.length;
+    dispatch(testApiSuccess({ value,
+      currency,
+      method,
+      tag,
+      description,
+      id,
+      exchangeRates: await showAllCoins() }));
     this.setState({ value: '',
       description: '',
-      currency: 'USD',
-      method: 'cash',
-      tag: 'food',
     });
   };
 
@@ -47,7 +52,7 @@ class WalletForm extends Component {
         <input
           data-testid="value-input"
           type="number"
-          name="number"
+          name="value"
           value={ value }
           onChange={ this.changeState }
         />
@@ -120,9 +125,12 @@ class WalletForm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  currencies: state.wallet.currencies });
+  currencies: state.wallet.currencies,
+  expense: state.wallet.expenses,
+});
 
 WalletForm.propTypes = {
+  expense: PropTypes.string.isRequired,
   currencies: PropTypes.arrayOf(
     PropTypes.string,
   ).isRequired,

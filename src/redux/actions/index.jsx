@@ -9,13 +9,13 @@ export const CURRENCY_VALUE = 'CURRENCY_VALUE';
 
 export const setEnter = (payload) => ({ type: EMAIL, payload });
 
-const testApiRequest = () => ({ type: API_REQUEST_TEST });
+export const testApiRequest = () => ({ type: API_REQUEST_TEST });
 
-const testApiSuccess = (payload) => ({ type: API_SUCESS_TEST, payload });
+export const testApiSuccess = (payload) => ({ type: CURRENCY_VALUE, payload });
 
-const testApiFail = (error) => ({ type: API_FAIL_TEST, payload: { error } });
+export const testApiFail = (error) => ({ type: API_FAIL_TEST, payload: { error } });
 
-const testCurrencyValue = (payload) => ({ type: API_SUCESS_TEST, payload });
+export const testCurrencyValue = (payload) => ({ type: API_SUCESS_TEST, payload });
 
 export const fetchCoins = () => (async (dispatch) => {
   dispatch(testApiRequest());

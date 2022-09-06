@@ -3,22 +3,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 class Header extends Component {
-  purchases = (expense) => (
-    expense.reduce((acc, money) => {
-      const { currency } = money;
-      return acc + (money.value * money.coinValue[currency].ask);
-    }, 0)
-  );
-
   render() {
     const { email, expense } = this.props;
-    console.log(expense);
-    const total = expense.length === 0 ? 0 : this.purchases(expense);
-
+    const coin = expense.map((item) => {
+      const { value, currency, exchangeRates } = item;
+      const { ask } = exchangeRates[currency];
+      return ask * value;
+    });
+    let total = expense.length > 0
+      ? Math.round(coin.reduce((acc, curr) => acc + curr) * 100) / 100
+      : 0;
+    if (total === 0) {
+      total = '0.00';
+    }
     return (
       <header>
         <h2 data-testid="email-field">{ email }</h2>
-        <h2 data-testid="total-field">{ total.toFixed(2) }</h2>
+        <h2 data-testid="total-field">{ total }</h2>
         <h2 data-testid="header-currency-field">BRL</h2>
       </header>
     );

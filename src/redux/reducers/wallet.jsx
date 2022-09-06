@@ -14,13 +14,7 @@ const siteWalletReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case CURRENCY_VALUE:
     return { ...state,
-      isFetching: false,
-      error: '',
-      expenses:
-      [
-        ...state.expenses,
-        { id: state.expenses.length, ...action.payload },
-      ],
+      expenses: [...state.expenses, action.payload],
     };
 
   case API_REQUEST_TEST:
