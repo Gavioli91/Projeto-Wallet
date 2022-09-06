@@ -11,7 +11,7 @@ export const fetchAllCoins = async () => {
     const coins = await showAllCoins();
     const keys = Object.keys(coins);
     const currencies = keys.filter((key) => key !== 'USDT');
-    return { currencies };
+    return currencies;
   } catch (error) {
     return error;
   }

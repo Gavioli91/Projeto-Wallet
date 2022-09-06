@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchCoins, fetchValueCoins } from '../redux/actions';
+import { fetchValueCoins } from '../redux/actions';
 
 class WalletForm extends Component {
   state = { value: '',
@@ -13,7 +13,7 @@ class WalletForm extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch(fetchCoins());
+    dispatch(fetchValueCoins());
   }
 
   changeState = ({ target: { name, value } }) => {
@@ -23,8 +23,8 @@ class WalletForm extends Component {
   submitButton = (event) => {
     event.preventDefault();
     // submitButton = () => {
-    const { dispatch } = this.props;
-    dispatch(fetchValueCoins(this.state));
+    // const { dispatch } = this.props;
+    // dispatch((this.state));
     this.setState({ value: '',
       description: '',
       currency: 'USD',

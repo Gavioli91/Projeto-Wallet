@@ -12,6 +12,7 @@ class Header extends Component {
 
   render() {
     const { email, expense } = this.props;
+    console.log(expense);
     const total = expense.length === 0 ? 0 : this.purchases(expense);
 
     return (

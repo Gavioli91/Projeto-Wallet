@@ -15,7 +15,7 @@ const testApiSuccess = (payload) => ({ type: API_SUCESS_TEST, payload });
 
 const testApiFail = (error) => ({ type: API_FAIL_TEST, payload: { error } });
 
-const testCurrencyValue = (payload) => ({ type: CURRENCY_VALUE, payload });
+const testCurrencyValue = (payload) => ({ type: API_SUCESS_TEST, payload });
 
 export const fetchCoins = () => (async (dispatch) => {
   dispatch(testApiRequest());
@@ -28,12 +28,12 @@ export const fetchCoins = () => (async (dispatch) => {
 }
 );
 
-export const fetchValueCoins = (payload) => (async (dispatch) => {
-  dispatch(apiRequest());
+export const fetchValueCoins = () => (async (dispatch) => {
+  dispatch(testApiRequest());
   try {
     const coinValue = await fetchAllCoins();
-    dispatch(testCurrencyValue({
-      ...payload, coinValue }));
+    console.log(coinValue);
+    dispatch(testCurrencyValue(coinValue));
   } catch (error) {
     dispatch(apiFail(error));
   }

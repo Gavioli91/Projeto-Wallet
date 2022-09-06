@@ -28,7 +28,7 @@ const siteWalletReducer = (state = INITIAL_STATE, action) => {
 
   case API_SUCESS_TEST:
     return { ...state,
-      currencies: action.payload.currencies,
+      currencies: action.payload,
       isFetching: false,
       error: '' };
 
