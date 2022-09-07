@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { deletePurchase } from '../redux/actions';
 
 const lista = ['Descrição', 'Tag', 'Método de pagamento', 'Valor', 'Moeda',
   'Câmbio utilizado', 'Valor convertido', 'Moeda de conversão', 'Editar/Excluir'];
@@ -15,7 +16,7 @@ class Table extends Component {
   );
 
   render() {
-    const { expenses } = this.props;
+    const { expenses, dispatch } = this.props;
     return (
       <div>
         <table>
@@ -33,9 +34,18 @@ class Table extends Component {
                   <td>{coin.exchangeRates[coin.currency].name}</td>
                   <td>{Number(exchange).toFixed(2)}</td>
                   <td>Real</td>
-                  <td>Editar/Excluir</td>
                   <td>
                     {(Number(exchange) * value).toFixed(2)}
+                  </td>
+                  <td>
+                    <button type="button">Editar</button>
+                    <button
+                      type="button"
+                      data-testid="delete-btn"
+                      onClick={ () => dispatch(deletePurchase(coin.id)) }
+                    >
+                      Excluir
+                    </button>
                   </td>
                 </tr>
               );
@@ -47,12 +57,12 @@ class Table extends Component {
   }
 }
 
+Table.propTypes = {
+  expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,
 });
-
-Table.propTypes = {
-  expenses: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-};
-
 export default connect(mapStateToProps)(Table);

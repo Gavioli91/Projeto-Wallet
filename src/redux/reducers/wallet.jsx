@@ -1,5 +1,5 @@
 import { CURRENCY_VALUE, API_REQUEST_TEST,
-  API_SUCESS_TEST, API_FAIL_TEST } from '../actions';
+  API_SUCESS_TEST, API_FAIL_TEST, DELETE_EXPENSE } from '../actions';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -31,6 +31,11 @@ const siteWalletReducer = (state = INITIAL_STATE, action) => {
       isFetching: false,
       error: action.payload.error,
     };
+
+  case DELETE_EXPENSE:
+    return { ...state,
+      expenses: state.expenses.filter((coin) => coin.id
+      !== action.payload) };
 
   default: return state;
   }
