@@ -1,59 +1,60 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchValueCoins, testApiSuccess } from '../redux/actions';
-import { showAllCoins } from '../services/requestApi';
+import PropTypes from 'prop-types';
+import { purchaseUpdate } from '../redux/actions';
 
 class WalletForm extends Component {
-  state = { value: '',
-    currency: 'USD',
-    method: 'Dinheiro',
-    tag: 'Alimentação',
+  state = {
+    value: '',
     description: '',
+    currency: '',
+    method: '',
+    tag: '',
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(fetchValueCoins());
+    const { expenses, idToEdit } = this.props;
+    const expenseToEdit = expenses[idToEdit];
+    this.setState({
+      value: expenseToEdit.value,
+      description: expenseToEdit.description,
+      currency: expenseToEdit.currency,
+      method: expenseToEdit.method,
+      tag: expenseToEdit.tag,
+    });
   }
 
   changeState = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
   };
 
-  submitButton = async (event) => {
-    event.preventDefault();
-    const { value, currency, method, tag, description } = this.state;
-    const { dispatch, expense } = this.props;
-    const id = expense.length;
-    dispatch(testApiSuccess({ value,
-      currency,
-      method,
-      tag,
-      description,
-      id,
-      exchangeRates: await showAllCoins() }));
-    this.setState({ value: '', description: '' });
+  submitButton = () => {
+    const { dispatch } = this.props;
+    dispatch(purchaseUpdate(this.state));
   };
 
   render() {
-    const { value, currency, method, tag, description } = this.state;
+    const { value, description, currency, method, tag } = this.state;
 
     const { currencies } = this.props;
+
+    const currenciesKeys = currencies.map((money) => (
+      <option key={ money } value={ money }>{ money }</option>
+    ));
 
     return (
       <form>
         <input
-          data-testid="value-input"
           type="number"
+          data-testid="value-input"
           name="value"
           value={ value }
           onChange={ this.changeState }
         />
 
         <input
-          data-testid="description-input"
           type="text"
+          data-testid="description-input"
           name="description"
           value={ description }
           onChange={ this.changeState }
@@ -62,15 +63,13 @@ class WalletForm extends Component {
         <label htmlFor="currency">
           Moeda:
           <select
-            data-testid="currency-input"
             id="currency"
             name="currency"
+            data-testid="currency-input"
             value={ currency }
             onChange={ this.changeState }
           >
-            { currencies.map((coin) => (
-              <option key={ coin } value={ coin }>{ coin }</option>
-            ))}
+            { currenciesKeys }
           </select>
         </label>
 
@@ -78,8 +77,8 @@ class WalletForm extends Component {
           Pagamento:
           <select
             data-testid="method-input"
-            name="method"
             id="method"
+            name="method"
             value={ method }
             onChange={ this.changeState }
           >
@@ -110,7 +109,7 @@ class WalletForm extends Component {
           type="submit"
           onClick={ this.submitButton }
         >
-          Adicionar despesa
+          Editar despesa
         </button>
 
       </form>
@@ -120,14 +119,19 @@ class WalletForm extends Component {
 
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
-  expense: state.wallet.expenses,
+  expenses: state.wallet.expenses,
+  idToEdit: state.wallet.idToEdit,
 });
 
 WalletForm.propTypes = {
-  expense: PropTypes.string.isRequired,
   currencies: PropTypes.arrayOf(
     PropTypes.string,
   ).isRequired,
-  dispatch: PropTypes.func.isRequired };
+  dispatch: PropTypes.func.isRequired,
+  expenses: PropTypes.arrayOf(
+    PropTypes.string,
+  ).isRequired,
+  idToEdit: PropTypes.number.isRequired,
+};
 
 export default connect(mapStateToProps)(WalletForm);

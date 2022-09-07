@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { deletePurchase } from '../redux/actions';
+import { deletePurchase, editPurchase } from '../redux/actions';
 
 const lista = ['Descrição', 'Tag', 'Método de pagamento', 'Valor', 'Moeda',
   'Câmbio utilizado', 'Valor convertido', 'Moeda de conversão', 'Editar/Excluir'];
 
 class Table extends Component {
   tabela = () => (
-    <table>
-      <tr>
+    <tr>
+      <tbody>
         { lista.map((topo) => <th key={ topo }>{ topo }</th>)}
-      </tr>
-    </table>
+      </tbody>
+    </tr>
   );
 
   render() {
@@ -38,7 +38,13 @@ class Table extends Component {
                     {(Number(exchange) * value).toFixed(2)}
                   </td>
                   <td>
-                    <button type="button">Editar</button>
+                    <button
+                      type="button"
+                      data-testid="edit-btn"
+                      onClick={ () => dispatch(editPurchase(coin.id)) }
+                    >
+                      Editar
+                    </button>
                     <button
                       type="button"
                       data-testid="delete-btn"

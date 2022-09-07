@@ -1,21 +1,18 @@
-import { CURRENCY_VALUE, API_REQUEST_TEST,
-  API_SUCESS_TEST, API_FAIL_TEST, DELETE_EXPENSE } from '../actions';
+import { CURRENCY_VALUE, API_REQUEST_TEST, API_SUCESS_TEST,
+  API_FAIL_TEST, DELETE_EXPENSE, EDIT_PURCHASE, PURCHASE_UPDATE } from '../actions';
 
-const INITIAL_STATE = {
-  currencies: [],
+const INITIAL_STATE = { currencies: [],
   expenses: [],
   editor: false,
   idToEdit: 0,
   isFetching: false,
-  error: '',
-};
+  error: '' };
 
 const siteWalletReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case CURRENCY_VALUE:
     return { ...state,
-      expenses: [...state.expenses, action.payload],
-    };
+      expenses: [...state.expenses, action.payload] };
 
   case API_REQUEST_TEST:
     return { ...state, isFetching: true };
@@ -30,6 +27,20 @@ const siteWalletReducer = (state = INITIAL_STATE, action) => {
     return { ...state,
       isFetching: false,
       error: action.payload.error,
+    };
+
+  case EDIT_PURCHASE:
+    return { ...state, change: true, idToEdit: action.payload };
+
+  case PURCHASE_UPDATE:
+    return { ...state,
+      expenses: state.expenses.map((expense) => {
+        if (expense.id === state.idToEdit) {
+          return { ...expense, ...action.payload };
+        }
+        return expense;
+      }),
+      change: false,
     };
 
   case DELETE_EXPENSE:
